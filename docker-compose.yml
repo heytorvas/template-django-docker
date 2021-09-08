@@ -23,17 +23,25 @@ services:
       - db
 
   api:
+    # name of container
     container_name: api
+    # path where dockerfile is
     build: ./api/
+    # start running
     command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    # set app ports
     ports:
       - "8000:8000"
+    # sync local files to container | same_path_on_build:workdir_on_dockerfile
     volumes:
-      - ./api/:/usr/src/project/api
+      - ./api/:/usr/src/project/api # change {project} for your project's name
+    # set dependency from another container
     depends_on:
       - db
+    # connect to another container
     networks:
       - postgres_network
+    # set environment variables
     env_file:
       - .env
 
