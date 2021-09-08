@@ -1,0 +1,42 @@
+version: '3.0'
+services:
+  db:
+    container_name: db
+    image: postgres:12
+    ports:
+      - "5432:5432"
+    env_file:
+      - .env
+    networks:
+      - postgres_network
+
+  pgadmin:
+    container_name: pgadmin
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    ports:
+      - "16543:80"
+    networks:
+      - postgres_network
+    depends_on:
+      - db
+
+  api:
+    container_name: api
+    build: ./api/
+    command: sh -c "python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./api/:/usr/src/project/api
+    depends_on:
+      - db
+    networks:
+      - postgres_network
+    env_file:
+      - .env
+
+networks: 
+  postgres_network:
+    driver: bridge
