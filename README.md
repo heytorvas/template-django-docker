@@ -26,3 +26,5 @@ docker-compose up api &
 ```bash
 docker-compose up pgadmin &
 ```
+## Notes
+Run project: ```http://localhost:8000```
